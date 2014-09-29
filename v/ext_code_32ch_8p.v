@@ -7,7 +7,8 @@ module ext_code_32ch_8p
     iClk,
     oCode
 );
-
+input                               iRst;
+input                               iClk;
 input                               iSET_FLAG;
 input           [31:0]              iSET_DATA;
 input                               iTrigger;
@@ -57,3 +58,5 @@ begin
         oCode <= 0;
     end
 end
+
+endmodule

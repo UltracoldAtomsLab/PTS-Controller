@@ -1,7 +1,9 @@
 module ext_code_32ch_8p
 (
-    iSET_FLAG,
-    iSET_DATA,
+    iSET_CODE_FLAG,
+    iSET_CODE,
+    iSET_INDEX_FLAG,
+    iSET_INDEX,
     iRst,
     iTrigger,
     iClk,
@@ -9,8 +11,11 @@ module ext_code_32ch_8p
 );
 input                               iRst;
 input                               iClk;
-input                               iSET_FLAG;
-input           [31:0]              iSET_DATA;
+input                               iSET_CODE_FLAG;
+input           [31:0]              iSET_CODE;
+input                               iSET_INDEX_FLAG;
+input           [7:0]               iSET_INDEX;
+
 input                               iTrigger;
 output  reg     [31:0]              oCode;
 reg             [31:0]              oCode_next;
@@ -19,12 +24,12 @@ reg             [7:0]               index,index_next;
 reg             [31:0]              storge[7:0];
 
 
-always @ (posedge iSET_FLAG or posedge iTrigger)
+
+always @ (posedge iTrigger or posedge iSET_INDEX_FLAG)
 begin
-    if(iSET_FLAG)
+    if(iSET_INDEX_FLAG)
     begin
-        storge[index] = iSET_DATA;
-        index_next = index +1;
+        index_next = iSET_INDEX;
     end
     else
     begin
@@ -32,7 +37,7 @@ begin
     end
 end
 
-always @ (posedge iRst or negedge iTrigger or negedge iSET_DATA)
+always @ (posedge iRst or negedge iTrigger negedge iSET_INDEX_FLAG)
 begin
     if(iRst)
     begin
@@ -51,12 +56,18 @@ always @ (*)
 begin
     if(iTrigger)
     begin
-        oCode <= storge[index-1];
+        oCode <= storge[index];
     end
     else
     begin
         oCode <= 0;
     end
 end
+
+always @ (posedge iSET_CODE_FLAG)
+begin
+    storge[index]<=iSET_CODE;
+end
+
 
 endmodule

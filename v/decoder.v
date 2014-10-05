@@ -4,8 +4,9 @@ module decoder
     imData,
     imData_Ready,
     oCode,
-    oCode_Ready
-
+    oCode_Ready,
+    oIndex,
+    oIndex_Ready
 );
 
 
@@ -17,16 +18,20 @@ input                           iRst;
 
 output      [31:0]              oCode;
 output                          oCode_Ready;
-                
+output      [7:0]               oIndex;
+output                          oIndex_Ready;                
 
 reg         [7:0]               state,state_next;
 reg         [7:0]               substate,substate_next;                
 
 reg         [7:0]               Code    [3:0];
 reg                             Code_Ready;
+reg         [7:0]               Index;
+reg                             Index_Ready;
 
 parameter                       M_IDLE          =   8'd0;
 parameter                       M_SET_CODE      =   8'd1;
+parameter                       M_SET_INDEX     =   8'd2;
 // ==== Structural Design ==============================
 
 
@@ -63,6 +68,7 @@ begin
         begin
             case(imData)
                 M_SET_CODE:     state_next = M_SET_CODE;
+                M_SET_INDEX:    state_next = M_SET_INDEX;
                 default:        state_next = M_IDLE;
             endcase
             substate_next = 0;
@@ -84,6 +90,12 @@ begin
             endcase
         end
         
+        M_SET_INDEX:
+        begin
+            state_next = M_IDLE;
+            substate_next = 0;
+        end
+
         default:
         begin
             state_next = M_IDLE;
@@ -109,6 +121,11 @@ begin
                 8'd3:       Code_Ready = 1;
                 default:    Code_Ready = 0;
             endcase
+       end
+        M_SET_INDEX:
+        begin
+            Index = imData;
+            Index_Ready = 1;
        end
        default:
        begin

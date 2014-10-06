@@ -157,6 +157,11 @@ wire             [7:0]      index;
 wire                        index_ready;
 wire             [31:0]     tCode;
 
+
+wire             [7:0]      debug_8;
+wire             [31:0]     debug_32;
+
+
 reg                         Rst;
 reg                         trigger;
 reg              [31:0]     oCode_Channel;
@@ -174,10 +179,11 @@ reg                         index_ready_channel;
 //=======================================================
 //  Structural coding
 //=======================================================
+/*
 always @ (*) begin
 	//nRst = KEY[0] && (reset_count==0) && line_reset;
 	nRst = KEY[0] && (reset_count==0);
-end
+end*/
 //assign line_reset = GPIO_0_IN[0];
 
 always @ (posedge CLOCK_50) 
@@ -213,16 +219,17 @@ ext_code_32ch_8p co(
     .iTrigger(trigger),
     .iClk(CLOCK_50),
     .oCode(tCode),
-    .debug_index(LED),
-    .debug_current_storge()
+    .debug_index(debug_8),
+    .debug_current_storge(debug_32)
 );
 
 assign iRXD     = RxD;
 //assign LED[7:0] = oCode_Channel[7:0];
-//assign LED = test;
-always @ (posedge index_ready)
+assign LED = test;
+always @ (posedge CLOCK_50)
 begin
-    test <= tCode[7:0];
+    test[2:0] <= debug_8[2:0];
+    test[7:4] <= tCode[3:0];
 end
 
 
@@ -230,6 +237,7 @@ always @ (posedge CLOCK_50)
 begin
     Rst <= ~KEY[1];
     trigger <= ~KEY[0];
+    //trigger <=GPIO_0_IN[1];
     oCode_Channel <= tCode;
     RxD <= GPIO_0_IN[0];
     
@@ -242,7 +250,10 @@ begin
     
 end
 
+always @ (negedge trigger)
+    test[3] = ~test[3];
 
+assign GPIO_0[0] = 1; 
 
 
 endmodule

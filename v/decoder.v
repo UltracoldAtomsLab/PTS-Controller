@@ -114,10 +114,12 @@ begin
         M_IDLE:
         begin
             Code_Ready = 0;
+            Index_Ready = 0;
         end
         M_SET_CODE:
         begin
             Code[substate][7:0] = imData;
+            Index_Ready = 0;
             case(substate)
                 8'd3:
                 begin
@@ -131,14 +133,18 @@ begin
         end
         M_SET_INDEX:
         begin
-            Index = imData;
+            Code_Ready = 0;
+            Index[7:0] = imData;
             if(imData_Ready)
                 Index_Ready = 1;
             else
                 Index_Ready = 0;
+                
         end
         default:
         begin
+            Code_Ready = 0;
+            Index_Ready = 0;
         end
    endcase
 end

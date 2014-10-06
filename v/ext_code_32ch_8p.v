@@ -35,7 +35,7 @@ wire                                change_index;
 assign change_index = (iTrigger || iSET_INDEX_FLAG);
 
 
-always @ (posedge change_index)
+always @ (posedge change_index)//don't write posedge or posedge
 begin
 	if(iSET_INDEX_FLAG == 1'b1)
     begin
@@ -47,7 +47,7 @@ begin
     end
 end
 
-always @ (negedge change_index)
+always @ (negedge change_index)//don't write posedge or posedge
 begin
     index <= index_next;
 end

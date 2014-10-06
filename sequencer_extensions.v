@@ -251,9 +251,6 @@ begin
     
 end
 
-always @ (negedge trigger)
-    test[3] = ~test[3];
-
 assign GPIO_0[0] = 1; 
 
 

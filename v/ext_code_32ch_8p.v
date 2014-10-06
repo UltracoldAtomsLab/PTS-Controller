@@ -30,31 +30,27 @@ reg             [7:0]               index,index_next;
 reg             [31:0]              storge[7:0];
 
 
+wire                                change_index;
 
-always @ (posedge iRst or posedge iTrigger or posedge iSET_INDEX_FLAG)
+assign change_index = (iTrigger || iSET_INDEX_FLAG);
+
+
+always @ (posedge change_index)
 begin
-    if (iRst)
+	if(iSET_INDEX_FLAG == 1'b1)
     begin
-        index_next = 0;
+        index_next = iSET_INDEX; 
     end
-    else
-    begin
-        if(iSET_INDEX_FLAG)
-        begin
-            index_next = iSET_INDEX;
-        end
-        else
-        begin
-            index_next = index - 1; //iTrigger
-        end
+	else
+    begin 
+        index_next = index -1'b1; 
     end
 end
 
-always @ (negedge iRst or negedge iTrigger or negedge iSET_INDEX_FLAG)
+always @ (negedge change_index)
 begin
     index <= index_next;
 end
-
 
 
 

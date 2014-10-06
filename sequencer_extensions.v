@@ -156,7 +156,7 @@ wire                        code_ready;
 wire             [7:0]      index;
 wire                        index_ready;
 wire             [31:0]     tCode;
-
+wire                        trigger_wire;
 
 wire             [7:0]      debug_8;
 wire             [31:0]     debug_32;
@@ -181,8 +181,8 @@ reg                         index_ready_channel;
 //=======================================================
 /*
 always @ (*) begin
-	//nRst = KEY[0] && (reset_count==0) && line_reset;
-	nRst = KEY[0] && (reset_count==0);
+    //nRst = KEY[0] && (reset_count==0) && line_reset;
+    nRst = KEY[0] && (reset_count==0);
 end*/
 //assign line_reset = GPIO_0_IN[0];
 
@@ -216,7 +216,7 @@ ext_code_32ch_8p co(
     .iSET_INDEX_FLAG(index_ready_channel),
     .iSET_INDEX(index_channel),
     .iRst(Rst),
-    .iTrigger(trigger),
+    .iTrigger(trigger_wire),
     .iClk(CLOCK_50),
     .oCode(tCode),
     .debug_index(debug_8),
@@ -224,11 +224,12 @@ ext_code_32ch_8p co(
 );
 
 assign iRXD     = RxD;
+assign trigger_wire = trigger;
 //assign LED[7:0] = oCode_Channel[7:0];
 assign LED = test;
 always @ (posedge CLOCK_50)
 begin
-    test[2:0] <= debug_8[2:0];
+    test[3:0] <= debug_8[3:0];
     test[7:4] <= tCode[3:0];
 end
 

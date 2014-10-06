@@ -38,7 +38,7 @@ begin
         index_next = 0;
     end
     else
-        begin
+    begin
         if(iSET_INDEX_FLAG)
         begin
             index_next = iSET_INDEX;
@@ -52,10 +52,12 @@ end
 
 always @ (negedge iRst or negedge iTrigger or negedge iSET_INDEX_FLAG)
 begin
-    begin
-        index <= index_next;
-    end
+    index <= index_next;
 end
+
+
+
+
 
 
 always @ (*)

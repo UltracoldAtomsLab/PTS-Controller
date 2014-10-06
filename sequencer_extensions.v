@@ -155,12 +155,22 @@ wire             [31:0]     code;
 wire                        code_ready;
 wire             [7:0]      index;
 wire                        index_ready;
-wire             [31:0]     oCode;
+wire             [31:0]     tCode;
 
 reg                         Rst;
 reg                         trigger;
 reg              [31:0]     oCode_Channel;
 reg                         RxD;
+reg              [7:0]      test;
+reg              [7:0]      mData_Channel;
+reg                         mDataReady_Channel;
+reg              [31:0]     code_Channel;
+reg                         code_ready_Channel;
+reg              [7:0]      index_channel;
+reg                         index_ready_channel;
+
+
+
 //=======================================================
 //  Structural coding
 //=======================================================
@@ -182,11 +192,10 @@ async_receiver AR(
     .RxD_idle()
 );
 
-decoder de
-(
+decoder de(
     .iRst(Rst),
-    .imData(mData),
-    .imData_Ready(mDataReady),
+    .imData(mData_Channel),
+    .imData_Ready(mDataReady_Channel),
     .oCode(code),
     .oCode_Ready(code_ready),
     .oIndex(index),
@@ -195,28 +204,42 @@ decoder de
 
 
 
-ext_code_32ch_8p co
-(
-    .iSET_CODE_FLAG(code_ready),
-    .iSET_CODE(code),
-    .iSET_INDEX_FLAG(index_ready),
-    .iSET_INDEX(index),
+ext_code_32ch_8p co(
+    .iSET_CODE_FLAG(code_ready_Channel),
+    .iSET_CODE(code_Channel),
+    .iSET_INDEX_FLAG(index_ready_channel),
+    .iSET_INDEX(index_channel),
     .iRst(Rst),
     .iTrigger(trigger),
     .iClk(CLOCK_50),
-    .oCode(oCode)
+    .oCode(tCode),
+    .debug_index(LED),
+    .debug_current_storge()
 );
 
 assign iRXD     = RxD;
-assign LED[7:0] = oCode_Channel[7:0];
+//assign LED[7:0] = oCode_Channel[7:0];
+//assign LED = test;
+always @ (posedge index_ready)
+begin
+    test <= tCode[7:0];
+end
 
 
 always @ (posedge CLOCK_50)
 begin
     Rst <= ~KEY[1];
     trigger <= ~KEY[0];
-    oCode_Channel <= oCode;
+    oCode_Channel <= tCode;
     RxD <= GPIO_0_IN[0];
+    
+    mDataReady_Channel <= mDataReady;
+    mData_Channel <= mData;
+    code_Channel <= code;
+    code_ready_Channel <= code_ready;
+    index_channel <= index;
+    index_ready_channel <= index_ready;
+    
 end
 
 

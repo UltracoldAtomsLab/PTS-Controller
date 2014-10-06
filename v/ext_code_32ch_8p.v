@@ -7,7 +7,9 @@ module ext_code_32ch_8p
     iRst,
     iTrigger,
     iClk,
-    oCode
+    oCode,
+    debug_index,
+    debug_current_storge
 );
 input                               iRst;
 input                               iClk;
@@ -18,6 +20,10 @@ input           [7:0]               iSET_INDEX;
 
 input                               iTrigger;
 output  reg     [31:0]              oCode;
+output          [7:0]               debug_index;
+output          [31:0]              debug_current_storge;
+
+
 reg             [31:0]              oCode_next;
 
 reg             [7:0]               index,index_next;
@@ -33,7 +39,7 @@ begin
     end
     else
     begin
-        index_next = index -1; //iTrigger
+        index_next = index - 1'b1; //iTrigger
     end
 end
 
@@ -67,5 +73,9 @@ begin
     storge[index]<=iSET_CODE;
 end
 
+
+//for debug usage
+assign debug_index = index;
+assign debug_current_storge = storge[index];
 
 endmodule

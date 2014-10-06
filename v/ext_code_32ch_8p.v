@@ -37,7 +37,7 @@ begin
     end
 end
 
-always @ (posedge iRst or negedge iTrigger negedge iSET_INDEX_FLAG)
+always @ (posedge iRst or negedge iTrigger or negedge iSET_INDEX_FLAG)
 begin
     if(iRst)
     begin

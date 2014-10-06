@@ -127,6 +127,8 @@ input            [1:0]      GPIO_1_IN;
 //=======================================================
 //  REG/WIRE declarations
 //=======================================================
+reg                         CLOCK_25;
+
 wire                        vjtag_tck;
 wire                        vjtag_tdi;
 wire                        vjtag_irin;
@@ -145,6 +147,20 @@ wire                        PC_flag;
 reg                         nRst;
 reg              [7:0]      reset_count;
 
+
+wire                        iRXD;
+wire             [7:0]      mData;
+wire                        mDataReady;
+wire             [31:0]     code;
+wire                        code_ready;
+wire             [7:0]      index;
+wire                        index_ready;
+wire             [31:0]     oCode;
+
+reg                         Rst;
+reg                         trigger;
+reg              [31:0]     oCode_Channel;
+reg                         RxD;
 //=======================================================
 //  Structural coding
 //=======================================================
@@ -154,35 +170,56 @@ always @ (*) begin
 end
 //assign line_reset = GPIO_0_IN[0];
 
-VJTAG vjtag0(
-    .ir_out(),
-    .tdo(vjtag_tdo),
-    .ir_in(vjtag_irin),
-    .tck(vjtag_tck),
-    .tdi(vjtag_tdi),
-    .virtual_state_cdr(vjtag_cdr),
-    .virtual_state_cir(vjtag_cir),
-    .virtual_state_e1dr(vjtag_e1dr),
-    .virtual_state_e2dr(vjtag_e2dr),
-    .virtual_state_pdr(vjtag_pdr),
-    .virtual_state_sdr(vjtag_sdr),
-    .virtual_state_udr(vjtag_udr),
-    .virtual_state_uir(vjtag_uir)
+always @ (posedge CLOCK_50) 
+    CLOCK_25 <= !CLOCK_25;
+    
+async_receiver AR(
+    .clk(CLOCK_25),
+    .RxD(iRXD),
+    .RxD_data_ready(mDataReady),
+    .RxD_data(mData),
+    .RxD_endofpacket(),
+    .RxD_idle()
 );
-    
-vJTAG_interface vjtag_i0(
-    .tck(vjtag_tck),
-    .tdi(vjtag_tdi),
-    .aclr(!nRst),
-    .ir_in(vjtag_irin),
-    .v_sdr(vjtag_sdr),
-    .udr(vjtag_udr),
-    
-    .DR(PC_data),
-    .tdo(vjtag_tdo),
-    
-    .iCLOCK_50(CLOCK_50),
-    .oFLAG(PC_flag)
+
+decoder de
+(
+    .iRst(Rst),
+    .imData(mData),
+    .imData_Ready(mDataReady),
+    .oCode(code),
+    .oCode_Ready(code_ready),
+    .oIndex(index),
+    .oIndex_Ready(index_ready)
 );
+
+
+
+ext_code_32ch_8p co
+(
+    .iSET_CODE_FLAG(code_ready),
+    .iSET_CODE(code),
+    .iSET_INDEX_FLAG(index_ready),
+    .iSET_INDEX(index),
+    .iRst(Rst),
+    .iTrigger(trigger),
+    .iClk(CLOCK_50),
+    .oCode(oCode)
+);
+
+assign iRXD     = RxD;
+assign LED[7:0] = oCode_Channel[7:0];
+
+
+always @ (posedge CLOCK_50)
+begin
+    Rst <= ~KEY[1];
+    trigger <= ~KEY[0];
+    oCode_Channel <= oCode;
+    RxD <= GPIO_0_IN[0];
+end
+
+
+
 
 endmodule

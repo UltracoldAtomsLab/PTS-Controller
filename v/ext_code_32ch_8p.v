@@ -41,12 +41,10 @@ always @ (posedge iRst or negedge iTrigger or negedge iSET_INDEX_FLAG)
 begin
     if(iRst)
     begin
-        oCode <= 0;
         index <= 0;
     end
     else
     begin
-        oCode <= oCode_next;
         index <= index_next;
     end
 end
@@ -60,7 +58,7 @@ begin
     end
     else
     begin
-        oCode <= 0;
+        oCode <= 32'd0;
     end
 end
 

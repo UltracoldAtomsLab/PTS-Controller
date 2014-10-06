@@ -381,6 +381,7 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to GPIO_1[30]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to GPIO_1[31]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to GPIO_1[32]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to GPIO_1[33]
+set_global_assignment -name VERILOG_FILE v/async_receiver.v
 set_global_assignment -name VERILOG_FILE v/decoder.v
 set_global_assignment -name VERILOG_FILE v/vJTAG_interface.v
 set_global_assignment -name VERILOG_FILE sequencer_extensions.v

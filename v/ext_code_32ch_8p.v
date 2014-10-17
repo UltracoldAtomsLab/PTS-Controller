@@ -43,7 +43,7 @@ begin
     end
 	else
     begin 
-        index_next = index -1'b1; 
+        index_next = index + 1'b1; 
     end
 end
 

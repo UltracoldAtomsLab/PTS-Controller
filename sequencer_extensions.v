@@ -208,7 +208,7 @@ decoder de(
     .oIndex_Ready(index_ready)
 );
 
-ptsController_32ch co(
+ext_code_32ch_256p co(
     .iSET_CODE_FLAG(code_ready_Channel),
     .iSET_CODE(code_Channel),
     .iSET_INDEX_FLAG(index_ready_channel),
@@ -224,10 +224,8 @@ defparam co.MAX_PLUSE = 256;
 
 assign iRXD     = RxD;
 assign trigger_wire = trigger;
-
-
+//assign LED[7:0] = oCode_Channel[7:0];
 assign LED = test;
-
 always @ (posedge CLOCK_50)
 begin
     test[3:0] <= debug_8[3:0];

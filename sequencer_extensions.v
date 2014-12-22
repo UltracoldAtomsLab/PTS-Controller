@@ -208,7 +208,7 @@ decoder de(
     .oIndex_Ready(index_ready)
 );
 
-ptsController_32ch # (.MAX_PLUSE(256)) co(
+ptsController_32ch co(
     .iSET_CODE_FLAG(code_ready_Channel),
     .iSET_CODE(code_Channel),
     .iSET_INDEX_FLAG(index_ready_channel),
@@ -220,6 +220,7 @@ ptsController_32ch # (.MAX_PLUSE(256)) co(
     .debug_index(debug_8),
     .debug_current_storge(debug_32)
 );
+defparam co.MAX_PLUSE = 256;
 
 assign iRXD     = RxD;
 assign trigger_wire = trigger;

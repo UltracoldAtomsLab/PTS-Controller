@@ -12,7 +12,7 @@ module ptsController_32ch
     debug_current_storge
 );
 
-parameter MAX_PLUSE = 8;
+parameter MAX_PLUSE = 256;
 
 input                               iRst;
 input                               iClk;

@@ -1,4 +1,4 @@
-module ext_code_32ch_8p
+module ext_code_32ch_256p
 (
     iSET_CODE_FLAG,
     iSET_CODE,
@@ -27,7 +27,7 @@ output          [31:0]              debug_current_storge;
 reg             [31:0]              Code;
 
 reg             [7:0]               index,index_next;
-reg             [31:0]              storge[7:0];
+reg             [31:0]              storge[255:0];
 
 
 wire                                change_index;
@@ -52,21 +52,6 @@ begin
     index <= index_next;
 end
 
-
-
-
-
-always @ (*)
-begin
-    if(iTrigger)
-    begin
-        Code <= storge[index];
-    end
-    else
-    begin
-        Code <= 32'd0;
-    end
-end
 
 always @ (posedge iSET_CODE_FLAG)
 begin

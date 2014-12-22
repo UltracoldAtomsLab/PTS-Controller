@@ -139,7 +139,6 @@ begin
                 Index_Ready = 1;
             else
                 Index_Ready = 0;
-                
         end
         default:
         begin

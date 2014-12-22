@@ -210,7 +210,7 @@ decoder de(
 
 
 
-ext_code_32ch_8p co(
+ext_code_32ch_256p co(
     .iSET_CODE_FLAG(code_ready_Channel),
     .iSET_CODE(code_Channel),
     .iSET_INDEX_FLAG(index_ready_channel),
@@ -230,15 +230,15 @@ assign LED = test;
 always @ (posedge CLOCK_50)
 begin
     test[3:0] <= debug_8[3:0];
-    test[7:4] <= tCode[3:0];
+    test[7:4] <= tCode[7:4];
 end
 
 
 always @ (posedge CLOCK_50)
 begin
     Rst <= ~KEY[1];
-    trigger <= ~KEY[0];
-    //trigger <=GPIO_0_IN[1];
+    //trigger <= ~KEY[0];
+    trigger <=GPIO_0_IN[1];
     oCode_Channel <= tCode;
     RxD <= GPIO_0_IN[0];
     
@@ -251,7 +251,13 @@ begin
     
 end
 
-assign GPIO_0[0] = 1; 
+assign GPIO_0[2] = ~trigger;
+assign GPIO_0[4] = 0;
 
+assign GPIO_0[33:30] = ~tCode[19:16]; //10Mhz
+assign GPIO_0[29:26] = ~tCode[15:12]; //Mhz
+assign GPIO_0[23:20] = ~tCode[11:8]; //100kHz
+assign GPIO_0[19:16] = ~tCode[7:4]; //10kHz
+assign GPIO_0[15:12] = ~tCode[3:0]; //kHz
 
 endmodule

@@ -10,6 +10,13 @@ module decoder
 );
 
 
+parameter                       M_IDLE          =   8'd0;
+parameter                       M_SET_CODE      =   8'd1;
+parameter                       M_SET_INDEX     =   8'd2;
+
+parameter                       PTS_CH_BYTE_NUM =   4;  
+
+
 // ==== I/O, Reg, Wire Declaration ======================================
 input       [7:0]               imData;
 input                           imData_Ready;
@@ -24,21 +31,29 @@ output                          oIndex_Ready;
 reg         [7:0]               state,state_next;
 reg         [7:0]               substate,substate_next;                
 
-reg         [7:0]               Code    [3:0];
+reg         [7:0]               Code    [PTS_CH_BYTE_NUM-1:0];
 reg                             Code_Ready;
 reg         [7:0]               Index;
 reg                             Index_Ready;
 
-parameter                       M_IDLE          =   8'd0;
-parameter                       M_SET_CODE      =   8'd1;
-parameter                       M_SET_INDEX     =   8'd2;
+ 
+
 // ==== Structural Design ==============================
 
+genvar i;
+generate
+for(i=0;i<PTS_CH_BYTE_NUM;i=i+1)
+begin: oCodeAssignment
+    assign oCode[8*i+7:8*i] = Code[i][7:0];
+end
+endgenerate
 
+/*
 assign oCode[7:0]       = Code[0][7:0];
 assign oCode[15:8]      = Code[1][7:0];
 assign oCode[23:16]     = Code[2][7:0];
 assign oCode[31:24]     = Code[3][7:0];
+*/
 
 assign oCode_Ready      = Code_Ready;
 assign oIndex           = Index;
@@ -78,7 +93,7 @@ begin
         M_SET_CODE:
         begin
             case(substate)
-                8'd3:
+                PTS_CH_BYTE_NUM-1:
                 begin
                     substate_next = 0;
                     state_next = M_IDLE;                
@@ -121,7 +136,7 @@ begin
             Code[substate][7:0] = imData;
             Index_Ready = 0;
             case(substate)
-                8'd3:
+                PTS_CH_BYTE_NUM-1:
                 begin
                     if(imData_Ready)//pass the ready flag
                         Code_Ready = 1;

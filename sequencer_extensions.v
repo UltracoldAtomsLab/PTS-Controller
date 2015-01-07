@@ -208,7 +208,8 @@ decoder de(
     .oIndex_Ready(index_ready)
 );
 
-ext_code_32ch_256p co(
+
+ptsController co(
     .iSET_CODE_FLAG(code_ready_Channel),
     .iSET_CODE(code_Channel),
     .iSET_INDEX_FLAG(index_ready_channel),

@@ -5,7 +5,7 @@
 set_global_assignment -name FAMILY "Cyclone IV E"
 set_global_assignment -name DEVICE EP4CE22F17C6
 set_global_assignment -name TOP_LEVEL_ENTITY sequencer_extensions
-set_global_assignment -name ORIGINAL_QUARTUS_VERSION "12.0"
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 12.0
 set_global_assignment -name LAST_QUARTUS_VERSION 14.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "11:02:21 OCTOBER 06,2014"
 set_global_assignment -name DEVICE_FILTER_PACKAGE FBGA
@@ -382,7 +382,6 @@ set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name VERILOG_FILE v/ptsController.v
-set_global_assignment -name VERILOG_FILE v/ext_code_32ch_256p.v
 set_global_assignment -name VERILOG_FILE sequencer_extensions.v
 set_global_assignment -name VERILOG_FILE v/vJTAG_interface.v
 set_global_assignment -name VERILOG_FILE v/VJTAG.v

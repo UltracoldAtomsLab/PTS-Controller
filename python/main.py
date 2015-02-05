@@ -30,17 +30,26 @@ class main(QMainWindow, Ui_mainWindow):
         if not self.ser.isOpen():
             self.ser.open()
         loop = int(self.spinBox.value())
-        fedit = int(self.lineEdit_edi.displayText())
+        useEdit = self.checkBox_edi.isChecked()
+        try:
+            fedit = int(self.lineEdit_edi.displayText())
+        except:
+            fedit = 0
+            useEdit = False
         f = int(self.lineEdit_f.displayText())
         df = int(self.lineEdit_df.displayText())
         index = 0
         for i in range(loop):
-            if self.checkBox_edi.isChecked():
+            print("----loop {0}----".format(i))
+            if useEdit:
                 self.ser.write(setFreq(index,fedit))
+                print("set fedit: ({0},{1})".format(index,fedit))
                 index +=1
             self.ser.write(setFreq(index,f+i*df))
+            print("set freq: ({0},{1})".format(index,f+i*df))
             index +=1
         self.ser.write(setIndex(0))
+        print("SET done!!")
 
 app = QApplication(sys.argv)
 mainprogram = main()

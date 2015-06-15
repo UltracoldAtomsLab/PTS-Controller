@@ -221,7 +221,7 @@ ptsController co(
     .debug_index(debug_8),
     .debug_current_storge(debug_32)
 );
-defparam co.MAX_PLUSE = 256;
+defparam co.MAX_PLUSE_NUM = 256;
 
 assign iRXD     = RxD;
 assign trigger_wire = trigger;
